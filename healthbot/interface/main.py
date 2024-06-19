@@ -43,13 +43,13 @@ if prompt:
 
 # Display symptoms as checkboxes below the chat
 if "symptoms" in st.session_state:
-    st.markdown("## Select Your Symptoms:")
+    st.markdown("## Confirm Your Symptoms:")
     symptoms = st.session_state.symptoms
     num_columns = min(4, len(symptoms))
     for i in range(0, len(symptoms), num_columns):
         cols = st.columns(num_columns)
         for col, symptom in zip(cols, symptoms[i:i + num_columns]):
             if symptom not in st.session_state:
-                st.session_state[symptom] = False
+                st.session_state[symptom] = True
             st.session_state[symptom] = col.checkbox(symptom, value=st.session_state[symptom])
     st.markdown("### Add any symptoms missing:")
