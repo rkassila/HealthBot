@@ -43,13 +43,19 @@ if prompt:
 
 # Display symptoms as checkboxes below the chat
 if "symptoms" in st.session_state:
-    st.markdown("## Select Your Symptoms:")
+    st.markdown("## Confirm Your Symptoms:")
     symptoms = st.session_state.symptoms
-    num_columns = min(4, len(symptoms))
-    for i in range(0, len(symptoms), num_columns):
-        cols = st.columns(num_columns)
-        for col, symptom in zip(cols, symptoms[i:i + num_columns]):
+
+    for symptom in symptoms:
+        col1, col2 = st.columns([3, 1])  # Adjust column width as needed
+        with col1:
             if symptom not in st.session_state:
-                st.session_state[symptom] = False
-            st.session_state[symptom] = col.checkbox(symptom, value=st.session_state[symptom])
-    st.markdown("### Add any symptoms missing:")
+                st.session_state[symptom] = True
+            st.session_state[symptom] = st.checkbox(symptom, value=st.session_state[symptom])
+        with col2:
+            slider_key = f"{symptom}_slider"
+            if slider_key not in st.session_state:
+                st.session_state[slider_key] = 0
+            st.session_state[slider_key] = st.slider(
+                "", min_value=0, max_value=10, value=st.session_state[slider_key], key=slider_key
+            )
