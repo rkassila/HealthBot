@@ -1,6 +1,6 @@
 # HealthBot
 
-HealthBot is a chatbot interface designed to assist patients in describing their symptoms and receiving potential diagnoses / transmitting better information to their healthcare provider. 
+HealthBot is a chatbot interface (in development) designed to assist patients in describing their symptoms and receiving potential diagnoses / transmitting information to their healthcare provider. 
 The chatbot will perform feature extraction, cross-references symptoms with a medical database, and provide predictions for possible diseases. It will also generate reports and handle patient history and ongoing treatments.
 
 ## Features
