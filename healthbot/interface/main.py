@@ -52,4 +52,4 @@ if "symptoms" in st.session_state:
             if symptom not in st.session_state:
                 st.session_state[symptom] = True
             st.session_state[symptom] = col.checkbox(symptom, value=st.session_state[symptom])
-    st.markdown("### Add any symptoms missing:")
+   # st.markdown("### Add any symptoms missing:")
