@@ -3,7 +3,17 @@ from logic import response_generator_symptoms  # To be replaced by symptoms dete
 
 MAX_COL = 5
 
-st.title("HealthBot")
+# Create two columns for the title and the reload button
+col1, col2 = st.columns([4, 1])
+
+with col1:
+    st.title("HealthBot")
+
+with col2:
+    # Reload button to reset the app
+    if st.button("Reload App"):
+        st.session_state.clear()
+        st.experimental_rerun()
 
 # Initialize chat history and phase state
 if "messages" not in st.session_state:
