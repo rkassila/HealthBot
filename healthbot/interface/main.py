@@ -1,82 +1,149 @@
 import streamlit as st
-from logic import response_generator_symptoms # To be replaced by symptoms detector
+from logic import response_generator_symptoms  # To be replaced by symptoms detector
 
 MAX_COL = 5
 
 st.title("HealthBot")
 
-# Initialize chat history and message number
+# Initialize chat history and phase state
 if "messages" not in st.session_state:
     st.session_state.messages = []
-    # Start the conversation with the first assistant response
-    first_response = "Could you please tell me about your symptoms today?"
-    st.session_state.messages.append({"role": "assistant", "content": first_response})
-    st.session_state.message_number = 0
+    st.session_state.messages.append({"role": "assistant", "content": "Could you please tell me about your symptoms today?"})
+    st.session_state.phase = 1
+    st.session_state.confirm_clicked = False
+    st.session_state.scaled_symptoms = {}
 
-# Display chat messages from history on app rerun
+# Display chat messages from history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Accept user input with a clear prompt
-prompt = st.chat_input("Please type here:")
+# Phase 1: Ask for symptoms, scale, and confirm
+if st.session_state.phase == 1:
+    prompt = st.chat_input("Please type here:", key="initial_input")
 
-# Display user input and generate response if prompt is provided
-if prompt:
-    # Display user message in chat message container
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    st.session_state.message_number += 1
+    if prompt:
+        # Display user message in chat message container
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Generate symptoms
-    symptoms = response_generator_symptoms(prompt)
-    # Store symptoms in session state
-    st.session_state.symptoms = symptoms
+        # Generate symptoms
+        symptoms = response_generator_symptoms(prompt)
+        # Store symptoms in session state
+        st.session_state.symptoms = symptoms
 
-# Initialize radio buttons state in session_state
-if "symptoms" in st.session_state:
-    symptoms = st.session_state.symptoms
-    for symptom in symptoms:
-        scale_key = f"{symptom}_scale"
-        if scale_key not in st.session_state:
-            st.session_state[scale_key] = 0
+    if "symptoms" in st.session_state and st.session_state.symptoms:
+        st.markdown("### Evaluate and confirm your symptoms:")
+        num_columns = min(MAX_COL, len(st.session_state.symptoms))
+        for i in range(0, len(st.session_state.symptoms), num_columns):
+            cols = st.columns(num_columns)
+            for col, symptom in zip(cols, st.session_state.symptoms[i:i + num_columns]):
+                scale_key = f"{symptom}_scale"
+                if scale_key not in st.session_state:
+                    st.session_state[scale_key] = 0
+                st.session_state.scaled_symptoms[symptom] = col.radio(
+                    f"Severity for {symptom}",
+                    options=list(range(5)),
+                    index=st.session_state[scale_key],
+                    key=scale_key,
+                )
 
-scaled_symptoms = {}
+        if st.button("Confirm Symptoms"):
+            st.session_state.confirm_clicked = True
+            st.experimental_rerun()
 
-# Display symptoms as radio buttons below the chat
-if "symptoms" in st.session_state:
-    st.markdown("### Evaluate and confirm your symptoms:")
-    symptoms = st.session_state.symptoms
-    num_columns = min(MAX_COL, len(symptoms))
-    for i in range(0, len(symptoms), num_columns):
+    if st.session_state.confirm_clicked:
+        cols = st.columns(len(st.session_state.symptoms))
+        symptom_severity_message = ""
+        for col, symptom in zip(cols, st.session_state.symptoms):
+            severity = st.session_state[f"{symptom}_scale"]
+            if severity != 0:
+                # col.markdown(f"**{symptom}:** {severity}")
+                symptom_severity_message += f"**{symptom}:** {severity}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+
+        st.session_state.messages.append({"role": "assistant", "content": symptom_severity_message})
+
+        # Move to Phase 2
+        st.session_state.messages.append({"role": "assistant", "content": "Please describe any current treatments and relevant health history"})
+        st.session_state.phase = 2
+        st.session_state.confirm_clicked = False
+        st.experimental_rerun()
+
+# Phase 2: Describe treatments and history
+if st.session_state.phase == 2:
+    prompt = st.chat_input("Please describe your treatments and history here:", key="next_prompt_input")
+
+    if prompt:
+        # Display user message in chat message container
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        # Respond with "ROGER"
+        roger_response = "ROGER"
+        st.session_state.messages.append({"role": "assistant", "content": roger_response})
+        st.chat_message("assistant").markdown(roger_response)
+
+        # Move to Phase 3
+        st.session_state.phase = 3
+        st.experimental_rerun()
+
+# Phase 3: Confirm symptoms from known list
+if st.session_state.phase == 3:
+
+    # Send to API for diseases prediction (TO DO)
+    # TO CODE
+    new_symptoms_list = ['symptom_1', 'symptom_2'] # to be replaced by API call
+    st.session_state.new_scaled_symptoms = {}
+
+    if "new_symptoms" not in st.session_state:
+        st.session_state.new_symptoms = new_symptoms_list
+
+    st.markdown("### Confirm and rate the severity of the following symptoms:")
+    num_columns = min(MAX_COL, len(st.session_state.new_symptoms))
+    for i in range(0, len(st.session_state.new_symptoms), num_columns):
         cols = st.columns(num_columns)
-        for col, symptom in zip(cols, symptoms[i:i + num_columns]):
-            scale_key = f"{symptom}_scale"
-            # Create radio buttons with a unique key
-            scaled_symptoms[symptom] = col.radio(
+        for col, symptom in zip(cols, st.session_state.new_symptoms[i:i + num_columns]):
+            scale_key = f"new_{symptom}_scale"
+            if scale_key not in st.session_state:
+                st.session_state[scale_key] = 0
+            st.session_state.new_scaled_symptoms[symptom] = col.radio(
                 f"Severity for {symptom}",
                 options=list(range(5)),
                 index=st.session_state[scale_key],
                 key=scale_key,
             )
 
-    # Add a confirm button
-    if "confirm_clicked" not in st.session_state:
-        if st.button("Confirm"):
-            st.session_state.confirm_clicked = True
-            st.experimental_rerun()
+    if st.button("Confirm New Symptoms"):
+        st.session_state.confirm_clicked = True
+        st.experimental_rerun()
 
-# Display results and next prompt if confirm was clicked
-if "confirm_clicked" in st.session_state and st.session_state.confirm_clicked:
-    st.markdown("### Symptom Severities")
-    # Create a single-row layout for the outputs
-    cols = st.columns(len(scaled_symptoms))
-    for col, (symptom, severity) in zip(cols, scaled_symptoms.items()):
-        col.markdown(f"**{symptom}:** {severity}")
+    if st.session_state.confirm_clicked:
+        cols = st.columns(len(st.session_state.new_symptoms))
+        new_symptom_severity_message = ""
+        for col, symptom in zip(cols, st.session_state.new_symptoms):
+            severity = st.session_state[f"new_{symptom}_scale"]
+            if severity != 0:
+                new_symptom_severity_message += f"**{symptom}:** {severity}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 
-    # Ask for history and current treatments
-    second_response = "Please describe any current treatments and relevant health history"
-    st.session_state.messages.append({"role": "assistant", "content": second_response})
-    st.chat_message("assistant").markdown(second_response)
+        st.session_state.messages.append({"role": "assistant", "content": new_symptom_severity_message})
+
+        # Proceed to next phase or conclude
+        st.session_state.messages.append({"role": "assistant", "content": "Thank you for your input!"})
+        st.session_state.phase = 4  # Assuming this concludes the chat
+        st.experimental_rerun()
+
+# Other symptoms (predicted) displayed for confirmation
+# TO CODE
+
+# Send to API for corrected diseases prediction
+# TO CODE
+
+# Generate file (with every symptom and best x predictions)
+# TO CODE
+
+# File displayed and thanks
+# TO CODE
