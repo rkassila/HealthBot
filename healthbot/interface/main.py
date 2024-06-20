@@ -131,7 +131,9 @@ if st.session_state.phase == 3:
 
         st.session_state.messages.append({"role": "assistant", "content": new_symptom_severity_message})
 
-        # Proceed to next phase or conclude
+        #Send to API for corrected diseases prediction
+        # Generate file (with every symptom and best x predictions)
+        # File displayed and thanks
         st.session_state.messages.append({"role": "assistant", "content": "Thank you for your input!"})
         st.session_state.phase = 4
         st.experimental_rerun()
