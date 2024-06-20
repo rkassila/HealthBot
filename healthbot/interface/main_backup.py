@@ -11,7 +11,7 @@ with col1:
 
 with col2:
     # Reload button to reset the app
-    if st.button("Reload App"):
+    if st.button("Reload app"):
         st.session_state.clear()
         st.experimental_rerun()
 
@@ -30,7 +30,7 @@ for message in st.session_state.messages:
 
 # Phase 1: Ask for symptoms, scale, and confirm
 if st.session_state.phase == 1:
-    prompt = st.chat_input("Please type here:", key="initial_input")
+    prompt = st.chat_input("Please type here", key="initial_input")
 
     if prompt:
         # Display user message in chat message container
@@ -83,7 +83,7 @@ if st.session_state.phase == 1:
 
 # Phase 2: Describe treatments and history
 if st.session_state.phase == 2:
-    prompt = st.chat_input("Please describe your treatments and history here:", key="next_prompt_input")
+    prompt = st.chat_input("Please describe your treatments and history here", key="next_prompt_input")
 
     if prompt:
         # Display user message in chat message container
