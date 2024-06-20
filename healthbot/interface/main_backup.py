@@ -82,8 +82,8 @@ if st.session_state.phase == 2:
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
 
-        # Respond with "ROGER"
-        roger_response = "ROGER"
+        # Response
+        roger_response = "Sending your informations for anylisis..."
         st.session_state.messages.append({"role": "assistant", "content": roger_response})
         st.chat_message("assistant").markdown(roger_response)
 
@@ -91,7 +91,7 @@ if st.session_state.phase == 2:
         st.session_state.phase = 3
         st.experimental_rerun()
 
-# Phase 3: Confirm symptoms from known list
+# Phase 3: Other symptoms displayed for confirmation
 if st.session_state.phase == 3:
 
     # Send to API for diseases prediction (TO DO)
@@ -102,7 +102,7 @@ if st.session_state.phase == 3:
     if "new_symptoms" not in st.session_state:
         st.session_state.new_symptoms = new_symptoms_list
 
-    st.markdown("### Confirm and rate the severity of the following symptoms:")
+    st.markdown("### Have you been experiencing the following symptoms:")
     num_columns = min(MAX_COL, len(st.session_state.new_symptoms))
     for i in range(0, len(st.session_state.new_symptoms), num_columns):
         cols = st.columns(num_columns)
@@ -133,11 +133,8 @@ if st.session_state.phase == 3:
 
         # Proceed to next phase or conclude
         st.session_state.messages.append({"role": "assistant", "content": "Thank you for your input!"})
-        st.session_state.phase = 4  # Assuming this concludes the chat
+        st.session_state.phase = 4
         st.experimental_rerun()
-
-# Other symptoms (predicted) displayed for confirmation
-# TO CODE
 
 # Send to API for corrected diseases prediction
 # TO CODE
