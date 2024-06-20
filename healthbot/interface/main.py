@@ -45,7 +45,7 @@ if "symptoms" in st.session_state:
 
 # Display symptoms as radio buttons below the chat
 if "symptoms" in st.session_state:
-    st.markdown("## Confirm Your Symptoms:")
+    st.markdown("## Evaluate and confirm your symptoms:")
     symptoms = st.session_state.symptoms
     num_columns = min(MAX_COL, len(symptoms))
     for i in range(0, len(symptoms), num_columns):
