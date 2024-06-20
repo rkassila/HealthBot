@@ -1,5 +1,5 @@
 import streamlit as st
-from logic import response_generator_symptoms # To be replaced by symptoms detector
+from logic import response_generator_symptoms
 
 MAX_COL = 5
 
