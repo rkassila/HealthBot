@@ -19,7 +19,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Accept user input with a clear prompt
-prompt = st.chat_input("Please describe your symptoms:")
+prompt = st.chat_input("Please type here:")
 
 # Display user input and generate response if prompt is provided
 if prompt:
@@ -43,21 +43,41 @@ if "symptoms" in st.session_state:
         if scale_key not in st.session_state:
             st.session_state[scale_key] = 0
 
+scaled_symptoms = {}
+
 # Display symptoms as radio buttons below the chat
 if "symptoms" in st.session_state:
-    st.markdown("## Evaluate and confirm your symptoms:")
+    st.markdown("### Evaluate and confirm your symptoms:")
     symptoms = st.session_state.symptoms
     num_columns = min(MAX_COL, len(symptoms))
     for i in range(0, len(symptoms), num_columns):
         cols = st.columns(num_columns)
         for col, symptom in zip(cols, symptoms[i:i + num_columns]):
             scale_key = f"{symptom}_scale"
-            # Display symptom in bold
-            #col.markdown(f"<b>Severity for {symptom}:</b>", unsafe_allow_html=True)
             # Create radio buttons with a unique key
-            col.radio(
+            scaled_symptoms[symptom] = col.radio(
                 f"Severity for {symptom}",
                 options=list(range(5)),
                 index=st.session_state[scale_key],
-                key=scale_key
+                key=scale_key,
             )
+    # Add a confirm button
+    if st.button("Confirm"):
+        st.markdown("### Symptom Severities")
+        # Create a single-row layout for the outputs
+        cols = st.columns(len(scaled_symptoms))
+        for col, (symptom, severity) in zip(cols, scaled_symptoms.items()):
+            col.markdown(f"**{symptom}:** {severity}")
+
+
+# Ask for history and current treatments
+    ###TO CODE
+
+# Send to API for diseases prediction
+# Other symptoms (predicted) displayed for confirmation
+
+# Send to API for corrected diseases prediction
+
+# Generate file (with every symptom and best x predictions)
+
+# File displayed and thanks
