@@ -5,11 +5,11 @@ The chatbot will perform feature extraction, cross-references symptoms with a me
 
 ## Features
 
-- **Chat Interface**: Users can interact with HealthBot by entering their symptoms and feelings. [in progress]
+- **Chat Interface**: Users can interact with HealthBot by entering their symptoms and feelings. [**in progress**]
 - **Feature Extraction**: Extracts key features from the user's input. [to be build]
 - **Database Comparison**: Cross-references symptoms with a medical database for comparison. [to be build]
 - **Predictions**: Provides predictions for potential diseases based on the user's symptoms. [to be build]
 - **Symptom Extraction**: Identifies common symptoms not mentioned by the user, and provides symptoms by disease. [to be build]
-- **Confirmation and Information Requests**: Asks for confirmation or additional information about predicted symptoms. [in progress]
+- **Confirmation and Information Requests**: Asks for confirmation or additional information about predicted symptoms. [**in progress**]
 - **Report Generation**: Generates a detailed report based on the user's input and the chatbot's analysis. [to be build]
 - **Patient History and Ongoing Treatment**: Manages and queries patient history and ongoing treatments. [to be build]
