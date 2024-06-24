@@ -20,7 +20,7 @@ The chatbot will perform feature extraction, cross-references symptoms with a me
 
 <table>
   <tr>
-    <td align="top"><img src="test_images/interface_dev_1.png" alt="Interface" width="500"></td>
+    <td align="top"><img src="test_images/interface_dev_1.png" alt="Interface" width="800"></td>
   </tr>
   <tr>
     <td align="center">Interface</td>
