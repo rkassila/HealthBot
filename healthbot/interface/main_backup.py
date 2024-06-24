@@ -3,7 +3,17 @@ from logic import response_generator_symptoms  # To be replaced by symptoms dete
 
 MAX_COL = 5
 
-st.title("HealthBot")
+# Create two columns for the title and the reload button
+col1, col2 = st.columns([4, 1])
+
+with col1:
+    st.title("HealthBot")
+
+with col2:
+    # Reload button to reset the app
+    if st.button("Reload app"):
+        st.session_state.clear()
+        st.experimental_rerun()
 
 # Initialize chat history and phase state
 if "messages" not in st.session_state:
@@ -20,7 +30,7 @@ for message in st.session_state.messages:
 
 # Phase 1: Ask for symptoms, scale, and confirm
 if st.session_state.phase == 1:
-    prompt = st.chat_input("Please type here:", key="initial_input")
+    prompt = st.chat_input("Please type here", key="initial_input")
 
     if prompt:
         # Display user message in chat message container
@@ -73,7 +83,7 @@ if st.session_state.phase == 1:
 
 # Phase 2: Describe treatments and history
 if st.session_state.phase == 2:
-    prompt = st.chat_input("Please describe your treatments and history here:", key="next_prompt_input")
+    prompt = st.chat_input("Please describe your treatments and history here", key="next_prompt_input")
 
     if prompt:
         # Display user message in chat message container
@@ -83,7 +93,7 @@ if st.session_state.phase == 2:
         st.session_state.messages.append({"role": "user", "content": prompt})
 
         # Response
-        roger_response = "Sending your informations for anylisis..."
+        roger_response = "Sending your informations for analysis..."
         st.session_state.messages.append({"role": "assistant", "content": roger_response})
         st.chat_message("assistant").markdown(roger_response)
 
@@ -131,7 +141,9 @@ if st.session_state.phase == 3:
 
         st.session_state.messages.append({"role": "assistant", "content": new_symptom_severity_message})
 
-        # Proceed to next phase or conclude
+        #Send to API for corrected diseases prediction
+        # Generate file (with every symptom and best x predictions)
+        # File displayed and thanks
         st.session_state.messages.append({"role": "assistant", "content": "Thank you for your input!"})
         st.session_state.phase = 4
         st.experimental_rerun()
