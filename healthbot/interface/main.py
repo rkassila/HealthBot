@@ -93,7 +93,7 @@ if st.session_state.phase == 2:
         st.session_state.messages.append({"role": "user", "content": prompt})
 
         # Response
-        roger_response = "Sending your informations for anylisis..."
+        roger_response = "Sending your informations for analysis..."
         st.session_state.messages.append({"role": "assistant", "content": roger_response})
         st.chat_message("assistant").markdown(roger_response)
 
