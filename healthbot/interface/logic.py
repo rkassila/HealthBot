@@ -7,7 +7,6 @@ stop_words = {'the', 'is', 'at', 'which', 'on', 'and', 'a', 'an', 'of', 'to', 'i
 
 # Creating mapping diseases df
 relative_path = os.path.join("databases", "diseases", "Symptom-severity.csv")
-absolute_path = os.path.abspath(relative_path)
 symptoms_df = pd.read_csv(relative_path)
 symptoms = symptoms_df['Symptom']
 mapping = {symptom: symptom.split('_') for symptom in symptoms}
