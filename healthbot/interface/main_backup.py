@@ -106,7 +106,7 @@ if st.session_state.phase == 3:
 
     # Send to API for diseases prediction (TO DO)
     new_symptoms_list = response_new_symptoms(st.session_state.symptoms)
-    st.session_state.new_scaled_symptoms = {}
+    new_scaled_symptoms = {}
 
     if "new_symptoms" not in st.session_state:
         st.session_state.new_symptoms = new_symptoms_list
@@ -122,12 +122,13 @@ if st.session_state.phase == 3:
                 scale_key = f"new_{symptom}_scale"
                 if scale_key not in st.session_state:
                     st.session_state[scale_key] = 0
-                st.session_state.new_scaled_symptoms[symptom] = col.radio(
+                new_scaled_symptoms[symptom] = col.radio(
                     f"Severity for {symptom}",
                     options=list(range(5)),
                     index=st.session_state[scale_key],
                     key=scale_key,
                 )
+            st.session_state.new_scaled_symptoms = new_scaled_symptoms
 
     if st.button("Confirm"):
         st.session_state.confirm_clicked = True
