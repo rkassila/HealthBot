@@ -8,7 +8,7 @@ stop_words = {'the', 'is', 'at', 'which', 'on', 'and', 'a', 'an', 'of', 'to', 'i
 # Creating mapping diseases df
 relative_path = os.path.join("databases", "diseases", "Symptom-severity.csv")
 absolute_path = os.path.abspath(relative_path)
-symptoms_df = pd.read_csv(absolute_path)
+symptoms_df = pd.read_csv(relative_path)
 symptoms = symptoms_df['Symptom']
 mapping = {symptom: symptom.split('_') for symptom in symptoms}
 
@@ -21,7 +21,6 @@ def response_generator_symptoms(prompt):
     words = re.findall(r'\b\w+\b', prompt.lower())
     # Remove stop words
     filtered_words = [word for word in words if word not in stop_words]
-
     matched_symptoms = [symptom for symptom in symptoms if match_symptom(symptom, filtered_words)]
 
     return matched_symptoms
