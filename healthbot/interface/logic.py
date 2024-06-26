@@ -26,7 +26,6 @@ def response_generator_symptoms(prompt):
     # Remove stop words
     filtered_words = [word for word in words if word not in stop_words]
     matched_symptoms = [symptom for symptom in symptoms if match_symptom(symptom, filtered_words)]
-
     return matched_symptoms
 
 def check_symptoms(row, symptoms):
@@ -37,12 +36,9 @@ def response_new_symptoms(input_symptoms):
     matched_diseases = diseases_df[diseases_df.apply(check_symptoms, symptoms=input_symptoms, axis=1)]
     symptom_columns = [f'Symptom_{i}' for i in range(1, 18)]
     all_symptoms = pd.Series(dtype='str')
-
     for col in symptom_columns:
         all_symptoms = pd.concat([all_symptoms, matched_diseases[col]])
-
     unique_symptoms = all_symptoms.dropna().str.strip().unique()
     unique_symptoms_list = unique_symptoms.tolist()
     unique_symptoms_not_in_input = list(set(unique_symptoms_list) - set(input_symptoms))
-
     return unique_symptoms_not_in_input
