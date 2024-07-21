@@ -15,7 +15,6 @@ mapping = {symptom: symptom.split('_') for symptom in symptoms}
 relative_path_diseases = os.path.join("databases", "diseases", "dataset.csv")
 diseases_df = pd.read_csv(relative_path_diseases)
 
-
 def match_symptom(symptom, test_list):
     words = mapping.get(symptom, [])
     return all(word in test_list for word in words)
